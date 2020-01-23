@@ -9,7 +9,7 @@ from google.auth.transport.requests import Request
 SCOPES = ['https://www.googleapis.com/auth/admin.directory.user']
 
 def main():
-    """Prints the GSuite App nameis and scopes for first 10 users.
+    """Prints the GSuite App names and related scopes for the first 10 users.
     """
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -26,13 +26,13 @@ def main():
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
+        # Save the credentials for the next run.
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('admin', 'directory_v1', credentials=creds)
 
-    # Call the Admin SDK Directory API
+    # Call the Admin SDK Directory API for users.
     print('Getting the first 10 users in the domain')
     results = service.users().list(customer='my_customer', maxResults=10,
                                 orderBy='email').execute()
@@ -41,7 +41,7 @@ def main():
     # Iterates over each user.
     for user in users:
         email = user['primaryEmail']
-        # Call the Admin API for app tokens.
+        # Call the Admin API for tokens.
         r = service.tokens().list(userKey=email).execute()
         print(email)
         for item in r['items']:
